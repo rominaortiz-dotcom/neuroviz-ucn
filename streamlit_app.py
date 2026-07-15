@@ -25,6 +25,8 @@ st.markdown("""
     section[data-testid="stSidebar"] { background-color: #1a1a2e; }
     section[data-testid="stSidebar"] * { color: #FAFAFA !important; }
     section[data-testid="stSidebar"] .stRadio label { font-size: 0.9rem; }
+    /* Insignias sobre fondo claro (#BF7330, #8F9FBF) necesitan texto oscuro para cumplir WCAG AA (4.5:1) */
+    section[data-testid="stSidebar"] .legend-dark { color: #0D0D0D !important; }
 
     /* Títulos */
     .page-title   { font-size:1.8rem; font-weight:800; color:#0D0D0D; margin-bottom:0; letter-spacing:-0.5px; }
@@ -149,14 +151,14 @@ with st.sidebar:
     st.markdown("**Paleta de colores**")
     st.markdown("""
 <div style="font-size:0.78rem; line-height:1.9;">
-  <span style="background:#BF7330;border-radius:3px;padding:1px 7px;color:white;font-size:0.7rem;">■</span> LOW meritocracia<br>
-  <span style="background:#8F9FBF;border-radius:3px;padding:1px 7px;color:#0D0D0D;font-size:0.7rem;">■</span> MEDIUM meritocracia<br>
+  <span class="legend-dark" style="background:#BF7330;border-radius:3px;padding:1px 7px;font-size:0.7rem;">■</span> LOW meritocracia<br>
+  <span class="legend-dark" style="background:#8F9FBF;border-radius:3px;padding:1px 7px;font-size:0.7rem;">■</span> MEDIUM meritocracia<br>
   <span style="background:#0511F2;border-radius:3px;padding:1px 7px;color:white;font-size:0.7rem;">■</span> HIGH meritocracia<br>
   <hr style="border-color:#333;margin:4px 0;">
   <span style="background:#0511F2;border-radius:3px;padding:1px 7px;color:white;font-size:0.7rem;">■</span> Congruente (IAT)<br>
-  <span style="background:#BF7330;border-radius:3px;padding:1px 7px;color:#1A1A1A;font-size:0.7rem;">■</span> Incongruente (IAT)<br>
+  <span class="legend-dark" style="background:#BF7330;border-radius:3px;padding:1px 7px;font-size:0.7rem;">■</span> Incongruente (IAT)<br>
   <span style="background:#8C5C20;border-radius:3px;padding:1px 7px;color:white;font-size:0.7rem;">■</span> Score_Merit<br>
-  <span style="background:#8F9FBF;border-radius:3px;padding:1px 7px;color:#0D0D0D;font-size:0.7rem;">■</span> Neutral / BAPQ
+  <span class="legend-dark" style="background:#8F9FBF;border-radius:3px;padding:1px 7px;font-size:0.7rem;">■</span> Neutral / BAPQ
 </div>
 """, unsafe_allow_html=True)
     st.divider()
