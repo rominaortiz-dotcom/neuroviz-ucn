@@ -85,7 +85,9 @@ def load_tal():
 def load_all():
     df = pd.read_excel("D_scores_final.xlsx", skiprows=2, header=0)
     df = df.dropna(subset=["id"])
-    df = df[df["id"] != "id"]
+    df["id"] = df["id"].astype(str)
+    # Filas de plantilla sin datos (id numérico plano "1".."16", resto de columnas vacío)
+    df = df[df["id"].str.startswith("S")]
     for col in ["media_RT_cong","media_RT_incong","D_score",
                 "n400_cong","n400_incong","porp_correctas","prop_errores"]:
         df[col] = pd.to_numeric(df[col], errors="coerce")
