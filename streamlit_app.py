@@ -553,12 +553,15 @@ elif "Estudio 1" in seccion:
         st.info("**T9, T12** · Acción: RESUMIR + DESCUBRIR · Objetivo: perfil grupal del D-score y detección de outliers individuales · H7: grupo HIGH → D-score más positivo · A1")
         st.markdown('<p class="sec-header">D-score por grupo de meritocracia</p>', unsafe_allow_html=True)
 
+        df_completo = df.dropna(subset=["D_score"])
+        ids_disponibles = sorted(df_completo["id"].dropna().astype(str).unique().tolist(),
+            key=lambda x: (len(x), x))
         sujeto_sel = st.selectbox(
             "🔍 Aislar perfil individual (T12 · A1)",
-            ["Todos"] + sorted(df["id"].dropna().astype(str).unique().tolist()),
-            help="Selecciona un participante para resaltar su perfil individual en el gráfico y ver sus valores clave, sin alterar la vista agregada del resto del dashboard."
+            ["Todos"] + ids_disponibles,
+            help="Selecciona un participante para resaltar su perfil individual en el gráfico y ver sus valores clave, sin alterar la vista agregada del resto del dashboard. Solo se listan sujetos con D-score, RT y ERP completos."
         )
-        sel_row = df[df["id"].astype(str) == sujeto_sel].iloc[0] if sujeto_sel != "Todos" else None
+        sel_row = df_completo[df_completo["id"].astype(str) == sujeto_sel].iloc[0] if sujeto_sel != "Todos" else None
 
         col1, col2 = st.columns(2)
 
