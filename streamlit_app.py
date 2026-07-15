@@ -555,10 +555,10 @@ elif "Estudio 1" in seccion:
 
         sujeto_sel = st.selectbox(
             "🔍 Aislar perfil individual (T12 · A1)",
-            ["Todos"] + sorted(df["id"].dropna().unique().tolist()),
+            ["Todos"] + sorted(df["id"].dropna().astype(str).unique().tolist()),
             help="Selecciona un participante para resaltar su perfil individual en el gráfico y ver sus valores clave, sin alterar la vista agregada del resto del dashboard."
         )
-        sel_row = df[df["id"] == sujeto_sel].iloc[0] if sujeto_sel != "Todos" else None
+        sel_row = df[df["id"].astype(str) == sujeto_sel].iloc[0] if sujeto_sel != "Todos" else None
 
         col1, col2 = st.columns(2)
 
