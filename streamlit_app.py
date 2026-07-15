@@ -548,7 +548,16 @@ elif "Estudio 1" in seccion:
 
     # ── TAB 1: D-SCORE ──────────────────────────────────────────────────────
     with tab1:
+        st.info("**T9, T12** · Acción: RESUMIR + DESCUBRIR · Objetivo: perfil grupal del D-score y detección de outliers individuales · H7: grupo HIGH → D-score más positivo · A1")
         st.markdown('<p class="sec-header">D-score por grupo de meritocracia</p>', unsafe_allow_html=True)
+
+        sujeto_sel = st.selectbox(
+            "🔍 Aislar perfil individual (T12 · A1)",
+            ["Todos"] + sorted(df["id"].dropna().unique().tolist()),
+            help="Selecciona un participante para resaltar su perfil individual en el gráfico y ver sus valores clave, sin alterar la vista agregada del resto del dashboard."
+        )
+        sel_row = df[df["id"] == sujeto_sel].iloc[0] if sujeto_sel != "Todos" else None
+
         col1, col2 = st.columns(2)
 
         with col1:
@@ -562,11 +571,18 @@ elif "Estudio 1" in seccion:
                 x_pos = ["LOW","MEDIUM","HIGH"].index(g)
                 fig.add_shape(type="line", x0=x_pos-0.3, x1=x_pos+0.3,
                     y0=m, y1=m, line=dict(color=col, width=3))
+            if sel_row is not None:
+                fig.add_trace(go.Scatter(
+                    x=[sel_row["grupo_meritocracia"]], y=[sel_row["D_score"]],
+                    mode="markers", marker=dict(size=16, color="black", symbol="star",
+                        line=dict(width=2, color="white")),
+                    name=str(sujeto_sel), showlegend=False,
+                    hovertemplate=f"ID: {sujeto_sel}<br>D-score: {sel_row['D_score']:.3f}<extra></extra>"))
             fig.update_layout(showlegend=False, height=380,
                 plot_bgcolor="white", paper_bgcolor="white",
                 margin=dict(t=20,b=20))
             st.plotly_chart(fig, width='stretch')
-            st.caption("T9, T12 · A1 | H7: grupo HIGH debería mostrar D-score más positivo (mayor sesgo pro-meritocrático implícito).")
+            st.caption("T9, T12 · A1 | H7: grupo HIGH debería mostrar D-score más positivo (mayor sesgo pro-meritocrático implícito). ★ = sujeto aislado.")
 
         with col2:
             fig2 = px.box(df, x="grupo_meritocracia", y="D_score",
@@ -575,10 +591,26 @@ elif "Estudio 1" in seccion:
                 points="all",
                 labels={"grupo_meritocracia":"Grupo","D_score":"D-score"})
             fig2.add_hline(y=0, line_dash="dash", line_color="gray")
+            if sel_row is not None:
+                fig2.add_trace(go.Scatter(
+                    x=[sel_row["grupo_meritocracia"]], y=[sel_row["D_score"]],
+                    mode="markers", marker=dict(size=16, color="black", symbol="star",
+                        line=dict(width=2, color="white")),
+                    name=str(sujeto_sel), showlegend=False,
+                    hovertemplate=f"ID: {sujeto_sel}<br>D-score: {sel_row['D_score']:.3f}<extra></extra>"))
             fig2.update_layout(showlegend=False, height=380,
                 plot_bgcolor="white", paper_bgcolor="white",
                 margin=dict(t=20,b=20))
             st.plotly_chart(fig2, width='stretch')
+
+        if sel_row is not None:
+            st.divider()
+            st.markdown(f'<p class="sec-header">Perfil individual — {sujeto_sel}</p>', unsafe_allow_html=True)
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("Grupo", sel_row["grupo_meritocracia"])
+            c2.metric("D-score", f"{sel_row['D_score']:.3f}")
+            c3.metric("Delta RT", f"{sel_row['delta_RT']:.0f} ms")
+            c4.metric("Delta N400", f"{sel_row['delta_N400']:.0f} µV·ms")
 
         st.divider()
         resumen_grupo = df.groupby("grupo_meritocracia")["D_score"].agg(
